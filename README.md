@@ -15,4 +15,7 @@ Custom object relational mapping framework. Simplified, SQL-free interaction wit
 * __Apache OpenJPA__
 * __JOOQ__
 
+###How it works
+* User creates connection to DB with JDBC(Can also choose to create connection pool)
+
 

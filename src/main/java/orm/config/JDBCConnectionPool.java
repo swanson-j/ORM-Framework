@@ -6,6 +6,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/*
+ *  Implementation of a connection pool that can be called when a connection is first established.
+ */
+
 public class JDBCConnectionPool {
     public static int POOL_SIZE = 5;
     public static List<Connection> availableConnections;
@@ -14,6 +19,11 @@ public class JDBCConnectionPool {
 
     private JDBCConnectionPool(){}
 
+    /*
+     *  createPool() is called by a developer after first establishing a connection.
+     *      This fills a list<Connection> of size POOL_SIZE with connections
+     *      made with JDBCConnection singleton with a path to jdbc config file
+     */
     public static void createPool() throws IOException, SQLException {
         availableConnections = new ArrayList<>();
         for(int i = 0; i < POOL_SIZE; i++){

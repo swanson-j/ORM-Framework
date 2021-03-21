@@ -1,5 +1,7 @@
 package orm.service;
 
+import orm.annotations.Column;
+
 public class Cup {
     private String color;
     private int height;
