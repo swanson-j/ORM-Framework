@@ -39,17 +39,8 @@ public class JDBCConnection {
         }
     }
 
-    public Path getConnectionPath() {
-        return connectionPath;
-    }
-
-    public void setConnectionPath(Path connectionPath) {
-        this.connectionPath = connectionPath;
-    }
-
     /*
      *  Creates initial connection
-     *  TODO: Establish the connection with the properties
      */
     public static JDBCConnection getInstance(String path) throws IOException {
         if(instance == null || properties != null){
