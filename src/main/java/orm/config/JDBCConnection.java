@@ -7,6 +7,9 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,10 +24,20 @@ public class JDBCConnection {
 
     private static JDBCConnection instance;
     private static Path connectionPath;
-    static List<String> properties;
+    private static List<String> properties;
 
 
     private JDBCConnection(){}
+
+    public static void setProperties(List<String> properties) {
+        JDBCConnection.properties = properties;
+    }
+
+    public static void printProperties(){
+        for(String property : properties){
+            System.out.println(property);
+        }
+    }
 
     public Path getConnectionPath() {
         return connectionPath;
@@ -36,11 +49,13 @@ public class JDBCConnection {
 
     /*
      *  Creates initial connection
+     *  TODO: Establish the connection with the properties
      */
-    public static JDBCConnection getConnection(String path) throws IOException {
-        if(instance == null){
+    public static JDBCConnection getInstance(String path) throws IOException {
+        if(instance == null || properties != null){
             connectionPath = Paths.get(path);
             getProperties();
+            instance = new JDBCConnection();
         }
         return instance;
     }
@@ -49,7 +64,7 @@ public class JDBCConnection {
      *  After initial creation of connection is made, user can now call this method
      *      with no Path string parameter
      */
-    public static JDBCConnection getConnection() throws IOException {
+    public static JDBCConnection getInstance() throws IOException {
         if(instance == null){
             throw new IOException("You need to create a connection with a path");
         }
@@ -68,9 +83,14 @@ public class JDBCConnection {
         lines.stream().forEach((String line) -> {
             properties.add(line);
         });
+    }
 
-        // Logging
-        properties.stream().forEach(System.out::println);
+    public Connection getConnection() throws SQLException{
+        return DriverManager.getConnection(
+                properties.get(0),
+                properties.get(1),
+                properties.get(2)
+        );
     }
 
 }
