@@ -1,6 +1,7 @@
 package orm.utilities;
 
 import orm.annotations.Entity;
+import orm.annotations.Foreign;
 import orm.config.JDBCConnection;
 import orm.testing.Alien;
 import orm.testing.Mothership;
@@ -49,12 +50,30 @@ public class EntityManager {
 
     public <T> boolean save(T t) throws IllegalAccessException {
 
+
         System.out.println("----------------------------------------------------");
+
+        // Get class name
         System.out.println(t.getClass().getAnnotation(Entity.class).name());
+
+        // Gets field name
         Arrays.stream(t.getClass().getDeclaredFields()).forEach(x->{
             System.out.println(x.getName());
         });
         System.out.println("----------------------------------------------------");
+
+
+        /*
+         *     gets only foreign key fields
+         * TODO: use this to recursively call foreign keys. When foreign keys
+         *          are all in DB, then I can add all fields
+         */
+        Arrays.stream(t.getClass().getDeclaredFields()).forEach(x->{
+            if(x.isAnnotationPresent(Foreign.class)){
+                System.out.println("Foreign keys: " + x.getName());
+            }
+        });
+
 
         Field[] fields = t.getClass().getFields();
 
