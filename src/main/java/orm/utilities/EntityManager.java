@@ -51,6 +51,7 @@ public class EntityManager {
     public <T> boolean save(T t) throws IllegalAccessException {
 
 
+
         System.out.println("----------------------------------------------------");
 
         // Get class name
@@ -64,13 +65,19 @@ public class EntityManager {
 
 
         /*
-         *     gets only foreign key fields
+         *  gets only foreign key fields and calls save on those fields to add
+         *      the independent rows first
+         *
          * TODO: use this to recursively call foreign keys. When foreign keys
          *          are all in DB, then I can add all fields
          */
         Arrays.stream(t.getClass().getDeclaredFields()).forEach(x->{
             if(x.isAnnotationPresent(Foreign.class)){
-                System.out.println("Foreign keys: " + x.getName());
+                try {
+                    save(x.get(t));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
