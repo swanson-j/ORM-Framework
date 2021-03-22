@@ -1,14 +1,17 @@
 package orm.utilities;
 
+import orm.annotations.Entity;
 import orm.config.JDBCConnection;
 import orm.testing.Alien;
 import orm.testing.Mothership;
 import orm.testing.RayGun;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -35,7 +38,7 @@ public class EntityManager {
         JDBCConnection.getInstance(path);
     }
 
-    public EntityManager getInstance(){
+    public static EntityManager getInstance(){
         if(instance == null){
             instance = new EntityManager();
         }
@@ -44,7 +47,22 @@ public class EntityManager {
 
     //TODO: crud operations
 
-    public boolean save(Object object){
+    public <T> boolean save(T t) throws IllegalAccessException {
+
+        System.out.println("----------------------------------------------------");
+        System.out.println(t.getClass().getAnnotation(Entity.class).name());
+        Arrays.stream(t.getClass().getDeclaredFields()).forEach(x->{
+            System.out.println(x.getName());
+        });
+        System.out.println("----------------------------------------------------");
+
+        Field[] fields = t.getClass().getFields();
+
+        for(int i = 0; i < fields.length; i++){
+            System.out.println(fields[i].get(t));
+        }
+
+
         return false;
     }
 
