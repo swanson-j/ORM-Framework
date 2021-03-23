@@ -1,7 +1,9 @@
 package orm.utilities;
 
+import orm.annotations.Column;
 import orm.annotations.Entity;
 import orm.annotations.Foreign;
+import orm.annotations.Primary;
 import orm.config.JDBCConnection;
 import orm.dao.EntityManagerDAO;
 import orm.testing.Alien;
@@ -15,6 +17,8 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Arrays.stream;
 
 
 /*
@@ -57,7 +61,7 @@ public class EntityManager {
      */
     public <T> void save(T t) throws IllegalAccessException {
 
-        Arrays.stream(t.getClass().getDeclaredFields()).forEach(x->{
+        stream(t.getClass().getDeclaredFields()).forEach(x->{
             if(x.isAnnotationPresent(Foreign.class)){
                 try {
                     save(x.get(t));
@@ -77,9 +81,30 @@ public class EntityManager {
         entityManagerDAO.save(sql);
     }
 
-    public <T> List<T> read(Class<T> clazz, List<String> where){
-        List<T> tList = new ArrayList<>();
-        return tList;
-    }
+    /**
+     *
+     * @param clazz:    relation
+     * @param f:        primary field to query against
+     * @param <T>       Model class
+     * @param <F>       dataType of primary field
+     */
+    public <T,F> void read(Class<T> clazz, F f) throws Exception {
+        String fieldName = "";
+        for(Field field : clazz.getFields()){
+            if(field.isAnnotationPresent(Primary.class)){
+                if(field.isAnnotationPresent(Column.class)){
+                    Column column = field.getAnnotation(Column.class);
+                    fieldName = column.name();
+                    break;
+                }
+            }
+        }
 
+        if(fieldName.equals(""))
+            throw new Exception("Primary and Column annotations must be present in each model");
+
+        System.out.println(FieldParser.read(clazz, fieldName, f));
+
+        //TODO: call DAO for select statement called read() from above method, within sysout^^
+    }
 }

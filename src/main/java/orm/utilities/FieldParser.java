@@ -116,7 +116,7 @@ public class FieldParser {
     /**
      *  Given a field, return the data type of that field
      * @param field:    field with data type to return
-     * @return  Data type of field as a String
+     * @return          Data type of field as a String
      */
     public static String returnDataType(Field field) {
 
@@ -126,6 +126,29 @@ public class FieldParser {
             default:
                 return field.getType().toString();
         }
+    }
+
+
+    /**
+     * Returns a select statement for querying
+     * @param clazz
+     * @param <T>
+     */
+    public static <T, D> String read(Class<T> clazz, String fieldName, D d){
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from " + clazz.getAnnotation(Entity.class).name() + " where " + fieldName + " = ");
+
+        for(Field field : clazz.getFields()){
+            if(field.isAnnotationPresent(Primary.class)){
+                if(returnDataType(field).equals("String")){
+                    sb.append("\'" + d + "\'");
+                }else{
+                    sb.append(d);
+                }
+            }
+        }
+
+        return sb.toString();
     }
 }
 

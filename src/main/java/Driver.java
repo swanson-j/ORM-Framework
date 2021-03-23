@@ -16,9 +16,8 @@ import java.util.Arrays;
 
 public class Driver {
 
-    public static void main(String[] args) throws IOException, SQLException, IllegalAccessException {
+    public static void main(String[] args) throws Exception {
         EntityManager.setPath("src/main/resources/jdbc.config");
-//        JDBCConnectionPool.createPool();
 
         Planet planet = new Planet("Omicron", "Green");
         Mothership mothership = new Mothership("000000000001",  planet);
@@ -27,19 +26,8 @@ public class Driver {
 
         EntityManager entityManager = EntityManager.getInstance();
 
-//        for(int i = 0; i < fields.length; i++){
-//            System.out.println(fieldParser.returnDataType(fields[i]));
-//        }
-
-//        System.out.println(fieldParser.returnSqlSave(alien, fields));
-
+        // save alien to db
 //        entityManager.save(alien);
-
-//        System.out.println(Alien.class.getAnnotation(Entity.class).name());
-//        Arrays.stream(Alien.class.getDeclaredFields()).forEach(x->{
-//            System.out.println(x.getName());
-//        });
-
-        entityManager.save(alien);
+        entityManager.read(Mothership.class, "555555555");
     }
 }
