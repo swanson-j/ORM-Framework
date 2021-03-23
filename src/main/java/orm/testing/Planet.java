@@ -10,9 +10,13 @@ public class Planet {
 
     @Primary
     @Column(name = "planetName")
-    String planetName;
+    public String planetName;
 
-    public Planet(String planetName) {
+    @Column(name = "color")
+    public String color;
+
+    public Planet(String planetName, String color) {
         this.planetName = planetName;
+        this.color = color;
     }
 }

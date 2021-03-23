@@ -13,11 +13,11 @@ public class Mothership {
     public String vinNumber;
 
     @Foreign(name = "Planet")
-    @Column(name = "planet")
-    public Planet planet;
+    @Column(name = "planetOriginated")
+    public Planet planetOriginated;
 
     public Mothership(String vinNumber, Planet planetOriginated) {
         this.vinNumber = vinNumber;
-        this.planet = planetOriginated;
+        this.planetOriginated = planetOriginated;
     }
 }

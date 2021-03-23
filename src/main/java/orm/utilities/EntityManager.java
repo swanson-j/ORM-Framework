@@ -81,13 +81,9 @@ public class EntityManager {
             }
         });
 
-
         Field[] fields = t.getClass().getFields();
 
-        for(int i = 0; i < fields.length; i++){
-            System.out.println(fields[i].get(t));
-        }
-
+        System.out.println(FieldParser.returnSqlSave(t, fields));
 
         return false;
     }

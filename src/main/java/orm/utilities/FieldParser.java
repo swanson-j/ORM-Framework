@@ -12,7 +12,7 @@ public class FieldParser {
     /*
      *  Returns a statement to insert a row when given a field array
      */
-    public <T> String returnSqlSave(T t, Field[] fields) throws IllegalAccessException {
+    public static <T> String returnSqlSave(T t, Field[] fields) throws IllegalAccessException {
         StringBuilder sb = new StringBuilder();
         sb.append("insert into " + t.getClass().getAnnotation(Entity.class).name() + " values (");
 
@@ -24,14 +24,15 @@ public class FieldParser {
                 if(fields[i].isAnnotationPresent(Foreign.class)){
 
                     int finalI = i;
+
                     // check each field in the foreign key object
-                    Arrays.stream(fields[i].get(t).getClass().getDeclaredFields()).forEach(x->{
+                    Arrays.stream(fields[i].get(t).getClass().getFields()).forEach(x->{
 
                         // if you find the primary key of the foreign key object
                         if(x.isAnnotationPresent(Primary.class)){
 
-                            // if the foreign key is a string
-                            if(returnDataType(x) == "String"){
+                            // if the foreign key's primary key is a string
+                            if(returnDataType(x).equals("String")){
                                 try {
                                     sb.append("\"" + x.get(fields[finalI].get(t)) + "\")");
                                 } catch (IllegalAccessException e) {
@@ -47,7 +48,7 @@ public class FieldParser {
                         }
                     });
                 } else {
-                    if(returnDataType(fields[i]) == "String"){
+                    if(returnDataType(fields[i]).equals("String")){
                         try {
                             sb.append("\"" + fields[i].get(t) + "\")");
                         } catch (IllegalAccessException e) {
@@ -72,13 +73,13 @@ public class FieldParser {
                     System.out.println(fields[i].get(t));
 
                     int finalI = i;
-                    Arrays.stream(fields[i].get(t).getClass().getDeclaredFields()).forEach(x->{
+                    Arrays.stream(fields[i].get(t).getClass().getFields()).forEach(x->{
 
                         // if you find the primary key of the foreign key object
                         if(x.isAnnotationPresent(Primary.class)){
 
                             // if the foreign key is a string
-                            if(returnDataType(x) == "String"){
+                            if(returnDataType(x).equals("String")){
                                 try {
                                     sb.append("\"" + x.get(fields[finalI].get(t)) + "\", ");
                                 } catch (IllegalAccessException e) {
@@ -94,7 +95,7 @@ public class FieldParser {
                         }
                     });
                 } else {
-                    if(returnDataType(fields[i]) == "String"){
+                    if(returnDataType(fields[i]).equals("String")){
                         try {
                             sb.append("\"" + fields[i].get(t) + "\", ");
                         } catch (IllegalAccessException e) {
@@ -113,7 +114,7 @@ public class FieldParser {
         return sb.toString();
     }
 
-    public String returnDataType(Field field) {
+    public static String returnDataType(Field field) {
 
         switch (field.getType().toString()) {
             case "class java.lang.String":

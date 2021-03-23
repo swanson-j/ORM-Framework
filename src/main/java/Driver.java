@@ -20,8 +20,8 @@ public class Driver {
         EntityManager.setPath("src/main/resources/jdbc.config");
 //        JDBCConnectionPool.createPool();
 
-        Planet planet = new Planet("Omicron");
-        Mothership mothership = new Mothership("000000000001", planet);
+        Planet planet = new Planet("Omicron", "Green");
+        Mothership mothership = new Mothership("000000000001",  planet);
         RayGun rayGun = new RayGun(123456, "Yellow");
         Alien alien = new Alien(1, "Josh", mothership, rayGun);
 
@@ -31,11 +31,11 @@ public class Driver {
         Field[] fields = alien.getClass().getFields();
         FieldParser fieldParser = new FieldParser();
 
-        for(int i = 0; i < fields.length; i++){
-            System.out.println(fieldParser.returnDataType(fields[i]));
-        }
+//        for(int i = 0; i < fields.length; i++){
+//            System.out.println(fieldParser.returnDataType(fields[i]));
+//        }
 
-        System.out.println(fieldParser.returnSqlSave(alien, fields));
+//        System.out.println(fieldParser.returnSqlSave(alien, fields));
 
 //        entityManager.save(alien);
 
@@ -43,5 +43,7 @@ public class Driver {
 //        Arrays.stream(Alien.class.getDeclaredFields()).forEach(x->{
 //            System.out.println(x.getName());
 //        });
+
+        entityManager.save(alien);
     }
 }
