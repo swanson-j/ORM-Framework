@@ -9,12 +9,12 @@ public class RayGun {
 
     @Primary
     @Column(name = "serialNumber")
-    public int serialNumber;
+    public String serialNumber;
 
     @Column(name = "plasmaColor")
     public String plasmaColor;
 
-    public RayGun(int serialNumber, String plasmaColor) {
+    public RayGun(String serialNumber, String plasmaColor) {
         this.serialNumber = serialNumber;
         this.plasmaColor = plasmaColor;
     }

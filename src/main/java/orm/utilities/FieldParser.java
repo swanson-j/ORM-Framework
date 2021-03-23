@@ -9,8 +9,11 @@ import java.util.Arrays;
 
 public class FieldParser {
 
-    /*
-     *  Returns a statement to insert a row when given a field array
+    /**
+     *  Builds a insert statement given some class and its fields.
+     *  Super nested for the purpose of checking for @Foreign annotation
+     *      to save the primary key of that object as the column value of
+     *      the current object
      */
     public static <T> String returnSqlSave(T t, Field[] fields) throws IllegalAccessException {
         StringBuilder sb = new StringBuilder();
@@ -34,7 +37,7 @@ public class FieldParser {
                             // if the foreign key's primary key is a string
                             if(returnDataType(x).equals("String")){
                                 try {
-                                    sb.append("\"" + x.get(fields[finalI].get(t)) + "\")");
+                                    sb.append("\'" + x.get(fields[finalI].get(t)) + "\')");
                                 } catch (IllegalAccessException e) {
                                     e.printStackTrace();
                                 }
@@ -50,7 +53,7 @@ public class FieldParser {
                 } else {
                     if(returnDataType(fields[i]).equals("String")){
                         try {
-                            sb.append("\"" + fields[i].get(t) + "\")");
+                            sb.append("\'" + fields[i].get(t) + "\')");
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
@@ -67,11 +70,6 @@ public class FieldParser {
                 if(fields[i].isAnnotationPresent(Foreign.class)){
                     // check each field in the foreign key object
 
-                    //TODO: Problem here
-                    System.out.println("Hello");
-
-                    System.out.println(fields[i].get(t));
-
                     int finalI = i;
                     Arrays.stream(fields[i].get(t).getClass().getFields()).forEach(x->{
 
@@ -81,7 +79,7 @@ public class FieldParser {
                             // if the foreign key is a string
                             if(returnDataType(x).equals("String")){
                                 try {
-                                    sb.append("\"" + x.get(fields[finalI].get(t)) + "\", ");
+                                    sb.append("\'" + x.get(fields[finalI].get(t)) + "\', ");
                                 } catch (IllegalAccessException e) {
                                     e.printStackTrace();
                                 }
@@ -97,7 +95,7 @@ public class FieldParser {
                 } else {
                     if(returnDataType(fields[i]).equals("String")){
                         try {
-                            sb.append("\"" + fields[i].get(t) + "\", ");
+                            sb.append("\'" + fields[i].get(t) + "\', ");
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
@@ -114,6 +112,12 @@ public class FieldParser {
         return sb.toString();
     }
 
+
+    /**
+     *  Given a field, return the data type of that field
+     * @param field:    field with data type to return
+     * @return  Data type of field as a String
+     */
     public static String returnDataType(Field field) {
 
         switch (field.getType().toString()) {

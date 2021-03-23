@@ -22,14 +22,10 @@ public class Driver {
 
         Planet planet = new Planet("Omicron", "Green");
         Mothership mothership = new Mothership("000000000001",  planet);
-        RayGun rayGun = new RayGun(123456, "Yellow");
+        RayGun rayGun = new RayGun("123456", "Yellow");
         Alien alien = new Alien(1, "Josh", mothership, rayGun);
 
         EntityManager entityManager = EntityManager.getInstance();
-
-
-        Field[] fields = alien.getClass().getFields();
-        FieldParser fieldParser = new FieldParser();
 
 //        for(int i = 0; i < fields.length; i++){
 //            System.out.println(fieldParser.returnDataType(fields[i]));

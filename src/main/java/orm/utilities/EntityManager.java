@@ -3,6 +3,7 @@ package orm.utilities;
 import orm.annotations.Entity;
 import orm.annotations.Foreign;
 import orm.config.JDBCConnection;
+import orm.dao.EntityManagerDAO;
 import orm.testing.Alien;
 import orm.testing.Mothership;
 import orm.testing.RayGun;
@@ -32,6 +33,7 @@ public class EntityManager {
     public List<Connection> usedConnections;
     public Connection connection;
     private static EntityManager instance;
+    public EntityManagerDAO entityManagerDAO;
 
     private EntityManager(){}
 
@@ -48,29 +50,13 @@ public class EntityManager {
 
     //TODO: crud operations
 
-    public <T> boolean save(T t) throws IllegalAccessException {
 
+    /**
+     *  Recursively calls save() on fields with @Foreign annotation. This
+     *      ensure that relations with dependencies are saved first
+     */
+    public <T> void save(T t) throws IllegalAccessException {
 
-
-        System.out.println("----------------------------------------------------");
-
-        // Get class name
-        System.out.println(t.getClass().getAnnotation(Entity.class).name());
-
-        // Gets field name
-        Arrays.stream(t.getClass().getDeclaredFields()).forEach(x->{
-            System.out.println(x.getName());
-        });
-        System.out.println("----------------------------------------------------");
-
-
-        /*
-         *  gets only foreign key fields and calls save on those fields to add
-         *      the independent rows first
-         *
-         * TODO: use this to recursively call foreign keys. When foreign keys
-         *          are all in DB, then I can add all fields
-         */
         Arrays.stream(t.getClass().getDeclaredFields()).forEach(x->{
             if(x.isAnnotationPresent(Foreign.class)){
                 try {
@@ -81,11 +67,14 @@ public class EntityManager {
             }
         });
 
+        //save fields in array and call returnSqlSave to get sql statement
         Field[] fields = t.getClass().getFields();
 
-        System.out.println(FieldParser.returnSqlSave(t, fields));
 
-        return false;
+        String sql = FieldParser.returnSqlSave(t, fields);
+
+        entityManagerDAO = new EntityManagerDAO();
+        entityManagerDAO.save(sql);
     }
 
     public <T> List<T> read(Class<T> clazz, List<String> where){
