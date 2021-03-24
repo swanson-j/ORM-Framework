@@ -15,6 +15,8 @@ public class Planet {
     @Column(name = "color")
     public String color;
 
+    public Planet(){}
+
     public Planet(String planetName, String color) {
         this.planetName = planetName;
         this.color = color;

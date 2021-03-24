@@ -16,6 +16,8 @@ public class Mothership {
     @Column(name = "planetOriginated")
     public Planet planetOriginated;
 
+    public Mothership(){}
+
     public Mothership(String vinNumber, Planet planetOriginated) {
         this.vinNumber = vinNumber;
         this.planetOriginated = planetOriginated;

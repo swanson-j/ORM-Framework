@@ -4,6 +4,7 @@ import orm.config.JDBCConnection;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -31,7 +32,17 @@ public class EntityManagerDAO implements InterfaceDAO<String> {
     }
 
     @Override
-    public List read(String s) {
+    public ResultSet read(String sql) {
+
+        try {
+            PreparedStatement preparedStatement = JDBCConnection.getInstance().getConnection().prepareStatement(sql);
+            return preparedStatement.executeQuery();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 

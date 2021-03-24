@@ -1,21 +1,17 @@
-package orm.utilities;
+package orm.service;
 
 import orm.annotations.Column;
-import orm.annotations.Entity;
 import orm.annotations.Foreign;
 import orm.annotations.Primary;
 import orm.config.JDBCConnection;
 import orm.dao.EntityManagerDAO;
-import orm.testing.Alien;
-import orm.testing.Mothership;
-import orm.testing.RayGun;
+import orm.exceptions.AnnotationException;
+import orm.utilities.FieldParser;
+import orm.utilities.ResultSetHandler;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.nio.file.Path;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.stream;
@@ -88,7 +84,7 @@ public class EntityManager {
      * @param <T>       Model class
      * @param <F>       dataType of primary field
      */
-    public <T,F> void read(Class<T> clazz, F f) throws Exception {
+    public <T,F> T read(Class<T> clazz, F f) throws Exception {
         String fieldName = "";
         for(Field field : clazz.getFields()){
             if(field.isAnnotationPresent(Primary.class)){
@@ -100,11 +96,15 @@ public class EntityManager {
             }
         }
 
+        //Throw an exception if the user did not provide annotations
         if(fieldName.equals(""))
-            throw new Exception("Primary and Column annotations must be present in each model");
+            throw new AnnotationException("Primary and Column annotations must be present in each model." +
+                    " Check: " + clazz.getName());
 
-        System.out.println(FieldParser.read(clazz, fieldName, f));
+        // Query select statement and send the result set to be handled
+        String sql = FieldParser.read(clazz, fieldName, f);
+        ResultSetHandler resultSetHandler = new ResultSetHandler();
+        return resultSetHandler.handleRead(clazz, sql);
 
-        //TODO: call DAO for select statement called read() from above method, within sysout^^
     }
 }
