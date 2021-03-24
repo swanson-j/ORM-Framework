@@ -64,4 +64,11 @@ public class Alien {
     public void setRayGun(RayGun rayGun) {
         this.rayGun = rayGun;
     }
+
+    public void printAlien(){
+        System.out.println("SSN: " + this.getSSN());
+        System.out.println("Name: " + this.getName());
+        System.out.println("Mothership: " + this.getMothership().vinNumber);
+        System.out.println("RayGun: " + this.getRayGun().serialNumber);
+    }
 }

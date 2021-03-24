@@ -22,4 +22,25 @@ public class Mothership {
         this.vinNumber = vinNumber;
         this.planetOriginated = planetOriginated;
     }
+
+    public String getVinNumber() {
+        return vinNumber;
+    }
+
+    public void setVinNumber(String vinNumber) {
+        this.vinNumber = vinNumber;
+    }
+
+    public Planet getPlanetOriginated() {
+        return planetOriginated;
+    }
+
+    public void setPlanetOriginated(Planet planetOriginated) {
+        this.planetOriginated = planetOriginated;
+    }
+
+    public void printMotherShip(){
+        System.out.println("VinNumber: " + vinNumber);
+        System.out.println("PlanetOriginated: " + planetOriginated.planetName);
+    }
 }

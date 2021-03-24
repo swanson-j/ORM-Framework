@@ -25,13 +25,19 @@ public class Driver {
         EntityManager entityManager = EntityManager.getInstance();
 
         // save alien to db
-        entityManager.save(alien);
+//        entityManager.save(alien);
 
-        //TODO: finish read within EntitiyManager and dao
-        RayGun newRaygun = entityManager.read(RayGun.class, "123456");
-        System.out.println("Serial Number: " + newRaygun.serialNumber);
-        System.out.println("Plasma Color: " + newRaygun.plasmaColor);
+        // read from db
+//        RayGun newRaygun = entityManager.read(RayGun.class, "123456");
+//        System.out.println("Serial Number: " + newRaygun.serialNumber);
+//        System.out.println("Plasma Color: " + newRaygun.plasmaColor);
 
+
+        Alien newAlien = entityManager.read(Alien.class, "2");
+        newAlien.printAlien();
+
+        Mothership mothership1 = entityManager.read(Mothership.class, "000000000002");
+        mothership.printMotherShip();
 
 
 //        Alien a = new Alien();

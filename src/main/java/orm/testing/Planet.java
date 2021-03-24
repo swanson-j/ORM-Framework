@@ -21,4 +21,20 @@ public class Planet {
         this.planetName = planetName;
         this.color = color;
     }
+
+    public String getPlanetName() {
+        return planetName;
+    }
+
+    public void setPlanetName(String planetName) {
+        this.planetName = planetName;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
 }

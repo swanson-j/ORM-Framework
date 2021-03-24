@@ -85,6 +85,8 @@ public class EntityManager {
      * @param <F>       dataType of primary field
      */
     public <T,F> T read(Class<T> clazz, F f) throws Exception {
+
+        // get the column name of the primary key
         String fieldName = "";
         for(Field field : clazz.getFields()){
             if(field.isAnnotationPresent(Primary.class)){
@@ -97,9 +99,10 @@ public class EntityManager {
         }
 
         //Throw an exception if the user did not provide annotations
-        if(fieldName.equals(""))
+        if(fieldName.equals("")) {
             throw new AnnotationException("Primary and Column annotations must be present in each model." +
                     " Check: " + clazz.getName());
+        }
 
         // Query select statement and send the result set to be handled
         String sql = FieldParser.read(clazz, fieldName, f);

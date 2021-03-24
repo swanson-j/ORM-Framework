@@ -2,6 +2,7 @@ package orm.utilities;
 
 import orm.annotations.Column;
 import orm.annotations.Foreign;
+import orm.annotations.Primary;
 import orm.dao.EntityManagerDAO;
 import orm.service.EntityManager;
 import orm.testing.RayGun;
@@ -31,6 +32,7 @@ public class ResultSetHandler {
             System.out.println("No result from given primary key\n\n");
             return null;
         }
+
         ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
         T clazzInstance = clazz.getConstructor().newInstance();
@@ -43,19 +45,45 @@ public class ResultSetHandler {
             String columnName;
             Method method;
 
+            // If a column has a foreign key annotation, then we build another
+            //      object recursively and shove that boy's reference into the column.
+            //      Get the result from the result set and query that foreign key with
+            //      the result as the primary key.
             if (fields[i].isAnnotationPresent(Foreign.class)) {
-                switch (fields[i].getType().toString()) {
+
+                Field[] foreignFields = fields[i].getType().getFields();
+                int primaryKeyID = 0;
+                for(int j = 0; j < foreignFields.length; j++){
+                    if(foreignFields[j].isAnnotationPresent(Primary.class)){
+                        primaryKeyID = j;
+                        break;
+                    }
+                }
+
+                switch (foreignFields[primaryKeyID].getType().toString()) {
                     case "int":
-                        EntityManager.getInstance().read(fields[i].getClass(), resultSet.getInt(i + 1));
+                        columnName = fields[i].getDeclaredAnnotation(Column.class).name();
+                        columnName = columnName.substring(0,1).toUpperCase() + columnName.substring(1);
+                        method = clazz.getMethod("set" + columnName, fields[i].getType());
+                        method.invoke(clazzInstance, EntityManager.getInstance().read(fields[i].getType(), resultSet.getInt(i + 1)));
                         break;
                     case "double":
-                        EntityManager.getInstance().read(fields[i].getClass(), resultSet.getDouble(i + 1));
+                        columnName = fields[i].getDeclaredAnnotation(Column.class).name();
+                        columnName = columnName.substring(0,1).toUpperCase() + columnName.substring(1);
+                        method = clazz.getMethod("set" + columnName, fields[i].getType());
+                        method.invoke(clazzInstance, EntityManager.getInstance().read(fields[i].getType(), resultSet.getDouble(i + 1)));
                         break;
                     case "class java.lang.String":
-                        EntityManager.getInstance().read(fields[i].getClass(), resultSet.getString(i + 1));
+                        columnName = fields[i].getDeclaredAnnotation(Column.class).name();
+                        columnName = columnName.substring(0,1).toUpperCase() + columnName.substring(1);
+                        method = clazz.getMethod("set" + columnName, fields[i].getType());
+                        method.invoke(clazzInstance, EntityManager.getInstance().read(fields[i].getType(), resultSet.getString(i + 1)));
                         break;
                     case "boolean":
-                        EntityManager.getInstance().read(fields[i].getClass(), resultSet.getBoolean(i + 1));
+                        columnName = fields[i].getDeclaredAnnotation(Column.class).name();
+                        columnName = columnName.substring(0,1).toUpperCase() + columnName.substring(1);
+                        method = clazz.getMethod("set" + columnName, fields[i].getType());
+                        method.invoke(clazzInstance, EntityManager.getInstance().read(fields[i].getType(), resultSet.getBoolean(i + 1)));
                         break;
                 }
             } else {
