@@ -5,10 +5,11 @@ import orm.testing.Planet;
 import orm.testing.RayGun;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class UpdateDriver {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SQLException {
 
         EntityManager.setPath("src/main/resources/jdbc.config");
 

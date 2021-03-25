@@ -5,6 +5,7 @@ import orm.annotations.Entity;
 import orm.annotations.Foreign;
 import orm.annotations.Primary;
 import orm.config.JDBCConnection;
+import orm.config.JDBCConnectionPool;
 import orm.dao.EntityManagerDAO;
 import orm.exceptions.AnnotationException;
 import orm.utilities.StatementHandler;
@@ -14,7 +15,9 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.*;
 
 import static java.util.Arrays.stream;
 
@@ -31,10 +34,9 @@ import static java.util.Arrays.stream;
  */
 public class EntityManager {
 
-    public List<Connection> availableConnections;
-    public List<Connection> usedConnections;
-    public Connection connection;
     private static EntityManager instance;
+    private static ExecutorService executorService;
+    public static JDBCConnectionPool connectionPool;
     public EntityManagerDAO entityManagerDAO;
 
     private EntityManager(){}
@@ -43,9 +45,11 @@ public class EntityManager {
         JDBCConnection.getInstance(path);
     }
 
-    public static EntityManager getInstance(){
+    public static EntityManager getInstance() throws IOException, SQLException {
         if(instance == null){
             instance = new EntityManager();
+            executorService = Executors.newFixedThreadPool(4);
+            JDBCConnectionPool.createPool();
         }
         return instance;
     }
@@ -71,7 +75,6 @@ public class EntityManager {
 
         //save fields in array and call returnSqlSave to get sql statement
         Field[] fields = t.getClass().getFields();
-
 
         String sql = StatementHandler.returnSqlSave(t, fields);
 
@@ -139,17 +142,25 @@ public class EntityManager {
     }
 
     /**
-     *  delete
+     *  delete: Uses multithreading and connection pool for MVP
      * @param clazz relation
      * @param d     primary key
      * @param <T>   Model class
      * @param <D>   Generic datatype
      */
-    public <T,D> void delete(Class<T> clazz, D d) {
+    public <T,D> void delete(Class<T> clazz, D d) throws ExecutionException, InterruptedException {
         entityManagerDAO = new EntityManagerDAO();
-        if(entityManagerDAO.destroy(StatementHandler.delete(clazz, d)))
-            System.out.println(clazz.getDeclaredAnnotation(Entity.class).name() + " destroyed");
-        else
-            System.out.println("Target missed");
+
+        Future future = executorService.submit(new Callable<String>(){
+            public String call() throws Exception{
+                if(entityManagerDAO.destroy(StatementHandler.delete(clazz, d)))
+                    return clazz.getDeclaredAnnotation(Entity.class).name() + " destroyed";
+                else
+                    return "Target missed";
+            }
+        });
+
+        System.out.println(future.get());
+        executorService.shutdown();
     }
 }

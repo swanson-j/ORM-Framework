@@ -63,7 +63,8 @@ public class JDBCConnection {
     }
 
     /*
-     *  Retrieves properties from the path file and stores them in properties map
+     *  Retrieves properties from the path file and stores them in properties map.
+     *      Reused code from group project
      */
     public static void getProperties() throws IOException {
         properties = new ArrayList<>();
