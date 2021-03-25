@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 public class EntityManagerDAO implements InterfaceDAO<String> {
     @Override
@@ -16,13 +15,13 @@ public class EntityManagerDAO implements InterfaceDAO<String> {
             int i = preparedStatement.executeUpdate();
             System.out.println("The number of updated rows were: " + i);
             return i;
-        } catch (SQLException throwables) {
-            String throwableMessage = throwables.getMessage();
+        } catch (SQLException throwable) {
+            String throwableMessage = throwable.getMessage();
             if(throwableMessage.substring(0,26).equals("ERROR: duplicate key value")){
                 System.out.println("The number of updated rows were: 0");
                 return 0;
             } else {
-                throwables.printStackTrace();
+                throwable.printStackTrace();
                 return -1;
             }
         } catch (IOException e) {
@@ -37,8 +36,8 @@ public class EntityManagerDAO implements InterfaceDAO<String> {
         try {
             PreparedStatement preparedStatement = JDBCConnection.getInstance().getConnection().prepareStatement(sql);
             return preparedStatement.executeQuery();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -47,12 +46,12 @@ public class EntityManagerDAO implements InterfaceDAO<String> {
     }
 
     @Override
-    public int update(String s) {
+    public int update(String sql) {
         try {
-            PreparedStatement preparedStatement = JDBCConnection.getInstance().getConnection().prepareStatement(s);
+            PreparedStatement preparedStatement = JDBCConnection.getInstance().getConnection().prepareStatement(sql);
             return preparedStatement.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
             return 0;
         } catch (IOException e) {
             e.printStackTrace();
@@ -61,8 +60,19 @@ public class EntityManagerDAO implements InterfaceDAO<String> {
     }
 
     @Override
-    public boolean destroy(String s) {
-        return false;
+    public boolean destroy(String sql) {
+        try {
+            PreparedStatement preparedStatement = JDBCConnection.getInstance().getConnection().prepareStatement(sql);
+            int i = preparedStatement.executeUpdate();
+
+            return i > 0;
+        } catch (SQLException throwable) {
+            System.out.println("Maintaining referential integrity: try killing orphans");
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
 

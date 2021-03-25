@@ -240,5 +240,19 @@ public class StatementHandler {
 
         return sb.toString();
     }
+
+    public static <T,D> String delete(Class<T> clazz, D d){
+        StringBuilder sb = new StringBuilder();
+        sb.append("delete from " + clazz.getDeclaredAnnotation(Entity.class).name() + " where ");
+        Field[] fields = clazz.getFields();
+        for(Field field : fields){
+            if(field.isAnnotationPresent(Primary.class)){
+                sb.append(field.getDeclaredAnnotation(Column.class).name());
+            }
+        }
+
+        sb.append(" = \'" + d + "\';");
+        return sb.toString();
+    }
 }
 

@@ -1,6 +1,7 @@
 package orm.service;
 
 import orm.annotations.Column;
+import orm.annotations.Entity;
 import orm.annotations.Foreign;
 import orm.annotations.Primary;
 import orm.config.JDBCConnection;
@@ -18,7 +19,7 @@ import java.util.List;
 import static java.util.Arrays.stream;
 
 
-/*
+/**
  *  EntityManager is a singleton that is used as an intermediate data layer to wrap
  *      objects and perform operations to send to the EntityManagerDAO
  *
@@ -79,7 +80,7 @@ public class EntityManager {
     }
 
     /**
-     *
+     *  read
      * @param clazz:    relation
      * @param f:        primary field to query against
      * @param <T>       Model class
@@ -114,15 +115,16 @@ public class EntityManager {
 
 
     /**
-     *
-     * @param t
-     * @param <T>
+     *  update
+     * @param t     instance
+     * @param d     primary key
+     * @param <T>   Class
+     * @param <D>   Generic Datatype
      */
     public <T, D> void update(T t, D d){
         entityManagerDAO = new EntityManagerDAO();
         Field[] fields = t.getClass().getFields();
         try {
-            //TODO: send to EntityDao to be updated
             System.out.println("Number of updated rows = " + entityManagerDAO.update(StatementHandler.update(t, d, fields)));
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
@@ -134,5 +136,20 @@ public class EntityManager {
             e.printStackTrace();
             System.out.println("Number of updated rows = 0");
         }
+    }
+
+    /**
+     *  delete
+     * @param clazz relation
+     * @param d     primary key
+     * @param <T>   Model class
+     * @param <D>   Generic datatype
+     */
+    public <T,D> void delete(Class<T> clazz, D d) {
+        entityManagerDAO = new EntityManagerDAO();
+        if(entityManagerDAO.destroy(StatementHandler.delete(clazz, d)))
+            System.out.println(clazz.getDeclaredAnnotation(Entity.class).name() + " destroyed");
+        else
+            System.out.println("Target missed");
     }
 }
