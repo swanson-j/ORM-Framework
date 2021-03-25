@@ -151,13 +151,11 @@ public class EntityManager {
     public <T,D> void delete(Class<T> clazz, D d) throws ExecutionException, InterruptedException {
         entityManagerDAO = new EntityManagerDAO();
 
-        Future future = executorService.submit(new Callable<String>(){
-            public String call() throws Exception{
-                if(entityManagerDAO.destroy(StatementHandler.delete(clazz, d)))
-                    return clazz.getDeclaredAnnotation(Entity.class).name() + " destroyed";
-                else
-                    return "Target missed";
-            }
+        Future future = executorService.submit(() -> {
+            if(entityManagerDAO.destroy(StatementHandler.delete(clazz, d)))
+                return clazz.getDeclaredAnnotation(Entity.class).name() + " destroyed";
+            else
+                return "Target missed";
         });
 
         System.out.println(future.get());

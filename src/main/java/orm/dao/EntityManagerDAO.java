@@ -1,6 +1,8 @@
 package orm.dao;
 
 import orm.config.JDBCConnection;
+import orm.config.JDBCConnectionPool;
+import orm.service.EntityManager;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -59,21 +61,31 @@ public class EntityManagerDAO implements InterfaceDAO<String> {
         }
     }
 
+
+    /**
+     *  Delete query that uses connection pool
+     * @param sql   sql statement
+     * @return      true if object is deleted
+     */
     @Override
-    public boolean destroy(String sql) {
+    public boolean destroy(String sql) throws IOException, SQLException {
         try {
-            PreparedStatement preparedStatement = JDBCConnection.getInstance().getConnection().prepareStatement(sql);
+
+            PreparedStatement preparedStatement = JDBCConnectionPool.getConnection().prepareStatement(sql);
+//            PreparedStatement preparedStatement = JDBCConnection.getInstance().getConnection().prepareStatement(sql);
             int i = preparedStatement.executeUpdate();
 
+            //release connection back to accessible connection pool
+            JDBCConnectionPool.releaseConnection();
             return i > 0;
-        } catch (SQLException throwable) {
+        } catch (SQLException | IOException throwable) {
             System.out.println("Maintaining referential integrity: try killing orphans");
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
+            JDBCConnectionPool.releaseConnection();
             return false;
         }
     }
+
+
 }
 
 

@@ -16,6 +16,9 @@ public class DeleteDriver {
 
         EntityManager entityManager = EntityManager.getInstance();
 
-        entityManager.delete(Alien.class, 2);
+        //Try deleting object that is referenced
+//        entityManager.delete(Mothership.class, "000000000002");
+
+        entityManager.delete(Alien.class, 4);
     }
 }
