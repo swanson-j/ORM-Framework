@@ -6,11 +6,12 @@ import orm.annotations.Primary;
 import orm.config.JDBCConnection;
 import orm.dao.EntityManagerDAO;
 import orm.exceptions.AnnotationException;
-import orm.utilities.FieldParser;
+import orm.utilities.StatementHandler;
 import orm.utilities.ResultSetHandler;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class EntityManager {
         Field[] fields = t.getClass().getFields();
 
 
-        String sql = FieldParser.returnSqlSave(t, fields);
+        String sql = StatementHandler.returnSqlSave(t, fields);
 
         entityManagerDAO = new EntityManagerDAO();
         entityManagerDAO.save(sql);
@@ -105,9 +106,33 @@ public class EntityManager {
         }
 
         // Query select statement and send the result set to be handled
-        String sql = FieldParser.read(clazz, fieldName, f);
+        String sql = StatementHandler.read(clazz, fieldName, f);
         ResultSetHandler resultSetHandler = new ResultSetHandler();
         return resultSetHandler.handleRead(clazz, sql);
 
+    }
+
+
+    /**
+     *
+     * @param t
+     * @param <T>
+     */
+    public <T, D> void update(T t, D d){
+        entityManagerDAO = new EntityManagerDAO();
+        Field[] fields = t.getClass().getFields();
+        try {
+            //TODO: send to EntityDao to be updated
+            System.out.println("Number of updated rows = " + entityManagerDAO.update(StatementHandler.update(t, d, fields)));
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            System.out.println("Number of updated rows = 0");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            System.out.println("Number of updated rows = 0");
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            System.out.println("Number of updated rows = 0");
+        }
     }
 }

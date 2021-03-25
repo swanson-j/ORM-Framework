@@ -31,19 +31,17 @@ public class Driver {
 //        RayGun newRaygun = entityManager.read(RayGun.class, "123456");
 //        System.out.println("Serial Number: " + newRaygun.serialNumber);
 //        System.out.println("Plasma Color: " + newRaygun.plasmaColor);
-
-
+//
+//
         Alien newAlien = entityManager.read(Alien.class, "2");
         newAlien.printAlien();
-
-        Mothership mothership1 = entityManager.read(Mothership.class, "000000000002");
-        mothership.printMotherShip();
-
-
-//        Alien a = new Alien();
-//        Method method = alien.getClass().getMethod("setSSN", int.class);
-//        method.invoke(a, 4);
 //
-//        System.out.println(a.SSN);
+//
+//
+//        Mothership mothership1 = entityManager.read(Mothership.class, "000000000002");
+//        mothership.printMotherShip();
+
+        // TODO: start and finish update
+
     }
 }

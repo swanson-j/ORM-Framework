@@ -48,7 +48,16 @@ public class EntityManagerDAO implements InterfaceDAO<String> {
 
     @Override
     public int update(String s) {
-        return 0;
+        try {
+            PreparedStatement preparedStatement = JDBCConnection.getInstance().getConnection().prepareStatement(s);
+            return preparedStatement.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return 0;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     @Override

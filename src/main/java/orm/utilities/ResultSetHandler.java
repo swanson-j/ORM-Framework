@@ -39,8 +39,7 @@ public class ResultSetHandler {
 
         Field[] fields = clazz.getFields();
 
-        // TODO: loop through result set columns and try to store values into constructor
-
+        // Loop through result set and try to store values by invoking set methods
         for (int i = 0; i < resultSetMetaData.getColumnCount(); i++) {
             String columnName;
             Method method;
