@@ -1,4 +1,4 @@
-package orm.testing;
+package orm.model;
 
 import orm.annotations.Column;
 import orm.annotations.Entity;

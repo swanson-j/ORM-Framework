@@ -2,7 +2,6 @@ package orm.dao;
 
 import orm.config.JDBCConnection;
 import orm.config.JDBCConnectionPool;
-import orm.service.EntityManager;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -20,7 +19,6 @@ public class EntityManagerDAO implements InterfaceDAO<String> {
         } catch (SQLException throwable) {
             String throwableMessage = throwable.getMessage();
             if(throwableMessage.substring(0,26).equals("ERROR: duplicate key value")){
-                System.out.println("The number of updated rows were: 0");
                 return 0;
             } else {
                 throwable.printStackTrace();
@@ -72,10 +70,9 @@ public class EntityManagerDAO implements InterfaceDAO<String> {
         try {
 
             PreparedStatement preparedStatement = JDBCConnectionPool.getConnection().prepareStatement(sql);
-//            PreparedStatement preparedStatement = JDBCConnection.getInstance().getConnection().prepareStatement(sql);
             int i = preparedStatement.executeUpdate();
 
-            //release connection back to accessible connection pool
+            // Release connection back to pool
             JDBCConnectionPool.releaseConnection();
             return i > 0;
         } catch (SQLException | IOException throwable) {

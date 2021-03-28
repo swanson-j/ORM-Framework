@@ -13,7 +13,7 @@ import java.util.Arrays;
 public class StatementHandler {
 
     /**
-     *  Builds a insert statement given some class and its fields.
+     *  Builds an insert statement given some class and its fields.
      *  Super nested for the purpose of checking for @Foreign annotation
      *      to save the primary key of that object as the column value of
      *      the current object
@@ -112,6 +112,7 @@ public class StatementHandler {
                 }
             }
         }
+        sb.append(";\n");
         return sb.toString();
     }
 

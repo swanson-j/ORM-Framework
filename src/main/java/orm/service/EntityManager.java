@@ -14,9 +14,7 @@ import orm.utilities.ResultSetHandler;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.concurrent.*;
 
 import static java.util.Arrays.stream;
@@ -36,8 +34,9 @@ public class EntityManager {
 
     private static EntityManager instance;
     private static ExecutorService executorService;
-    public static JDBCConnectionPool connectionPool;
     public EntityManagerDAO entityManagerDAO;
+    public static int transactionSave = 0;
+    public static StringBuilder transactionStringBuilder = new StringBuilder("begin;\n");
 
     private EntityManager(){}
 
@@ -63,9 +62,11 @@ public class EntityManager {
      */
     public <T> void save(T t) throws IllegalAccessException {
 
+        // call save() on foreign keys
         stream(t.getClass().getDeclaredFields()).forEach(x->{
             if(x.isAnnotationPresent(Foreign.class)){
                 try {
+//                    transactionSave++;
                     save(x.get(t));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
@@ -80,6 +81,19 @@ public class EntityManager {
 
         entityManagerDAO = new EntityManagerDAO();
         entityManagerDAO.save(sql);
+
+        /**
+         * Failed transaction
+         */
+//        transactionStringBuilder.append(sql);
+//        if(transactionSave == 0){
+//            transactionStringBuilder.append("commit;");
+//            entityManagerDAO = new EntityManagerDAO();
+//            entityManagerDAO.save(transactionStringBuilder.toString());
+//            System.out.println(transactionStringBuilder.toString());
+//        }else{
+//            transactionSave--;
+//        }
     }
 
     /**
@@ -159,6 +173,5 @@ public class EntityManager {
         });
 
         System.out.println(future.get());
-        executorService.shutdown();
     }
 }

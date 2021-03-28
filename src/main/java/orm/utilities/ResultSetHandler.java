@@ -5,15 +5,11 @@ import orm.annotations.Foreign;
 import orm.annotations.Primary;
 import orm.dao.EntityManagerDAO;
 import orm.service.EntityManager;
-import orm.testing.RayGun;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 
 
 /**
@@ -35,6 +31,7 @@ public class ResultSetHandler {
 
         ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
+        // Why we need a no-arg constructor
         T clazzInstance = clazz.getConstructor().newInstance();
 
         Field[] fields = clazz.getFields();
