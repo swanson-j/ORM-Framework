@@ -4,16 +4,9 @@ Custom object relational mapping framework. Simplified, SQL-free interaction wit
 
 ###Tech stack
 * __Java 8__
-* __Junit__
 * __Apache Maven__
 * __PostGreSQL deployed on AWS RDS__
 * __Git SCM__
-
-###Frameworks researched: 
-
-* __Hibernate__
-* __Apache OpenJPA__
-* __JOOQ__
 
 ###How it works
 * User creates connection to DB with JDBC(Can also choose to create connection pool)
