@@ -17,12 +17,14 @@ Custom object relational mapping framework. Simplified, SQL-free interaction wit
 
 ### How It Works
 * User creates connection to DB with JDBC by creating a configuration file listing:
-  > DB url(ex: jdbc:postgresql://samplepsql.sample.us-east-1.rds.amazonaws.com:5432/postgres?currentSchema=yourSchema)
+  > 1. DB url(ex: jdbc:postgresql://samplepsql.sample.us-east-1.rds.amazonaws.com:5432/postgres?currentSchema=yourSchema)
   > 
-  > username
+  > 2. username
   > 
-  > password
-* 
+  > 3. password
+* Set the path of the Entity Manager singleton to the location of the configuration file(ex. EntityManager.setPath(src/main/resources/jdbc.config))
+* Annotate all classes and fields that will be persisted with the appropriate Annotations
+* You are now ready to use the Entity Manager to perform CRUD operations on objects
 
 ### Annotations
 | Annotation  | Description |
