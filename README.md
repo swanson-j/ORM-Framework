@@ -18,7 +18,9 @@ Custom object relational mapping framework. Simplified, SQL-free interaction wit
 ### How It Works
 * User creates connection to DB with JDBC by creating a configuration file listing:
   > DB url(ex: jdbc:postgresql://samplepsql.sample.us-east-1.rds.amazonaws.com:5432/postgres?currentSchema=yourSchema)
+  > 
   > username
+  > 
   > password
 * 
 
