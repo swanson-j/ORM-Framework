@@ -26,6 +26,14 @@ Custom object relational mapping framework. Simplified, SQL-free interaction wit
 * Annotate all classes and fields that will be persisted with the appropriate Annotations
 * You are now ready to use the Entity Manager to perform CRUD operations on objects
 
+### Operations
+| Operation | Description | Usage |
+| --------- | ----------- | ----- |
+| save      | Persists object to data store | EntityManager.save(Object)  |
+| read      | Reads from data store and dynamically constructs parent object with all dependencies  | EntityManager.read(clazz.class, primaryId)  |
+| update    | Updates object in data store if primary key exists  | EntityManager.update(Object, primaryId) |
+| delete    | Deletes object from data store while maintaining referential integrity |  EntityManager.delete(clazz.class, primaryId)  |
+
 ### Annotations
 | Annotation  | Description |
 | ----------- | ------------|
