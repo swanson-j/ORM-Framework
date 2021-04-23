@@ -8,7 +8,15 @@ Custom object relational mapping framework. Simplified, SQL-free interaction wit
 * __PostGreSQL deployed on AWS RDS__
 * __Git SCM__
 
-### How it works
+### Getting Started
+> Clone the repository(git clone)
+> Install the project with Maven(mvn install)
+> Add the project as a dependency within your pom.xml
+> <dependency>
+>  <groupId>org.example</groupId>
+>  <artifactId>ORM-Framework</artifactId>
+>  <version>1.0-SNAPSHOT</version>
+> </dependency>
 * User creates connection to DB with JDBC(Can also choose to create connection pool)
 
 ### Annotations
