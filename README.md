@@ -26,7 +26,7 @@ Custom object relational mapping framework. Simplified, SQL-free interaction wit
 * Annotate all classes and fields that will be persisted with the appropriate Annotations
 * You are now ready to use the Entity Manager to perform CRUD operations on objects
 
-### Operations
+### CRUD Operations
 | Operation | Description | Usage |
 | --------- | ----------- | ----- |
 | save      | Persists object to data store | EntityManager.save(Object)  |
