@@ -15,7 +15,12 @@ Custom object relational mapping framework. Simplified, SQL-free interaction wit
 >
 > Add the project as a dependency within your pom.xml
 
-* User creates connection to DB with JDBC(Can also choose to create connection pool)
+### How It Works
+* User creates connection to DB with JDBC by creating a configuration file listing:
+  > DB url(ex: jdbc:postgresql://samplepsql.sample.us-east-1.rds.amazonaws.com:5432/postgres?currentSchema=yourSchema)
+  > username
+  > password
+* 
 
 ### Annotations
 | Annotation  | Description |
