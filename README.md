@@ -9,14 +9,10 @@ Custom object relational mapping framework. Simplified, SQL-free interaction wit
 * __Git SCM__
 
 ### Getting Started
-> Clone the repository(git clone)
+> Clone the repository(git clone https://github.com/swanson-j/ORM-Framework.git)
 > Install the project with Maven(mvn install)
 > Add the project as a dependency within your pom.xml
-> <dependency>
->  <groupId>org.example</groupId>
->  <artifactId>ORM-Framework</artifactId>
->  <version>1.0-SNAPSHOT</version>
-> </dependency>
+
 * User creates connection to DB with JDBC(Can also choose to create connection pool)
 
 ### Annotations
